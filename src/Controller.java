@@ -16,26 +16,40 @@ public class Controller {
     // takes in data from .tsp file and constructs an instance of the TSP class with said data
     private static TSP readInData() throws IOException {
         // file input vars
-        File file = new File("./data/burma14.tsp");
+        File file = new File("./data/oliver30.tsp");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         int lineCount = 0;
+        int tspDimension = 0;
 
         // matrix for TSP constructor -- [nodes][Xcoord, Ycoord]
-        float[][] input = new float[14][2];
+        float[][] input = new float[0][0];
 
         while ((st = br.readLine()) != null) {
             lineCount++;
             // begin reading in nodes into matrix
 
+
+            // grab the dimension of the tsp
+            if (lineCount == 4) {
+//                nodeNum = nodeNum.replaceAll("(\\d+).+", "$1");
+                Pattern p = Pattern.compile("(\\d+)");
+                Matcher m = p.matcher(st);
+                m.find();
+                tspDimension = Integer.parseInt(m.group(1));
+
+                // set input dimension size
+                input = new float[tspDimension][2];
+            }
+
             // this currently only works for burma14.tsp -- will have to change to work for any size tsp
-            if (lineCount > 8 && lineCount < 23) {
+            if (lineCount > 8 && lineCount < (9 + tspDimension)) {
                 // grab nodeNumber
                 String nodeNum = st;
                 nodeNum = nodeNum.replaceAll("(\\d+).+", "$1");
 
                 // grab the two float coordinates
-                Pattern p = Pattern.compile("(\\d\\d.\\d\\d)");
+                Pattern p = Pattern.compile("(\\d+.\\d\\d)");
                 Matcher m = p.matcher(st);
                 m.find();
                 String xCoord = m.group(1);
@@ -266,7 +280,7 @@ public class Controller {
         }
 
         // iterate solutions
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 100; i++) {
             cycle(tspInstance);
         }
     }
