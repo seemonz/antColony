@@ -9,14 +9,14 @@ import java.util.Random;
 
 // manages Ant, TSP and initializing
 public class Controller {
-    // if we set either to 1 then that one isn't considered in the probablity function
-    private static float alpha = 1.0f; // parameter for weighting the pheromone -- currently not considered
+    // if we set either to 1 then that one isn't considered in the probability function
+    private static float alpha = 1.0f; // parameter for weighting the pheromone
     private static float beta = 1.0f; // parameter for weighting the distance heuristic
 
     // takes in data from .tsp file and constructs an instance of the TSP class with said data
     private static TSP readInData() throws IOException {
         // file input vars
-        File file = new File("./data/oliver30.tsp");
+        File file = new File("./data/burma14.tsp");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         int lineCount = 0;
@@ -32,7 +32,6 @@ public class Controller {
 
             // grab the dimension of the tsp
             if (lineCount == 4) {
-//                nodeNum = nodeNum.replaceAll("(\\d+).+", "$1");
                 Pattern p = Pattern.compile("(\\d+)");
                 Matcher m = p.matcher(st);
                 m.find();
@@ -63,6 +62,15 @@ public class Controller {
             }
         }
         TSP tspInstance = new TSP(input); // our TSP object
+
+        float size = (float) input.length;
+        // set the starting pheromone for all edges
+        for(int i = 0; i < tspInstance.getSize(); i++) {
+            for(int j = 0; j < tspInstance.getSize(); j++) {
+                tspInstance.getNodePheromone()[i][j] = 1.0f/size;
+            }
+        }
+
         return tspInstance;
     }
 
@@ -271,13 +279,6 @@ public class Controller {
     public static void main(String[] args) throws IOException {
         // initialize
         TSP tspInstance = readInData();
-
-        // set the starting pheromone for all edges
-        for(int i = 0; i < tspInstance.getSize(); i++) {
-            for(int j = 0; j < tspInstance.getSize(); j++) {
-                tspInstance.getNodePheromone()[i][j] = 1.0f/13.0f;
-            }
-        }
 
         // iterate solutions
         for(int i = 0; i < 100; i++) {
