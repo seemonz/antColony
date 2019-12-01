@@ -16,7 +16,7 @@ public class Controller {
     // takes in data from .tsp file and constructs an instance of the TSP class with said data
     private static TSP readInData() throws IOException {
         // file input vars
-        File file = new File("./data/burma14.tsp");
+        File file = new File("./data/oliver30.tsp");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         int lineCount = 0;
@@ -281,7 +281,7 @@ public class Controller {
         TSP tspInstance = readInData();
 
         // iterate solutions
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             cycle(tspInstance);
         }
     }
