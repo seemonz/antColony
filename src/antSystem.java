@@ -20,67 +20,6 @@ abstract class antSystem {
     private static float alpha = 1.0f; // parameter for weighting the pheromone
     private static float beta = 1.0f; // parameter for weighting the distance heuristic
 
-//    // takes in data from .tsp file and constructs an instance of the TSP class with said data
-//    protected TSP readInData() throws IOException {
-//        // file input vars
-//        File file = new File("./data/oliver30.tsp");
-//        BufferedReader br = new BufferedReader(new FileReader(file));
-//        String st;
-//        int lineCount = 0;
-//        int tspDimension = 0;
-//
-//        // matrix for TSP constructor -- [nodes][Xcoord, Ycoord]
-//        float[][] input = new float[0][0];
-//
-//        while ((st = br.readLine()) != null) {
-//            lineCount++;
-//            // begin reading in nodes into matrix
-//
-//
-//            // grab the dimension of the tsp
-//            if (lineCount == 4) {
-//                Pattern p = Pattern.compile("(\\d+)");
-//                Matcher m = p.matcher(st);
-//                m.find();
-//                tspDimension = Integer.parseInt(m.group(1));
-//
-//                // set input dimension size
-//                input = new float[tspDimension][2];
-//            }
-//
-//            // works for burma14.tsp and oliver30.tsp and likely any of the tsps with the correct coordinate values
-//            if (lineCount > 8 && lineCount < (9 + tspDimension)) {
-//                // grab nodeNumber
-//                String nodeNum = st;
-//                nodeNum = nodeNum.replaceAll("(\\d+).+", "$1");
-//
-//                // grab the two float coordinates
-//                Pattern p = Pattern.compile("(\\d+.\\d\\d)");
-//                Matcher m = p.matcher(st);
-//                m.find();
-//                String xCoord = m.group(1);
-//                m.find();
-//                String yCoord = m.group(1);
-//
-//                // take three strings and put into input matrix
-//                int node = Integer.parseInt(nodeNum.trim()); // for correct position in matrix
-//                input[node - 1][0] = Float.parseFloat(xCoord.trim()); // x
-//                input[node - 1][1] = Float.parseFloat(yCoord.trim()); // y
-//            }
-//        }
-//        TSP tspInstance = new TSP(input); // our TSP object
-//
-//        float size = (float) input.length;
-//        // set the starting pheromone for all edges
-//        for(int i = 0; i < tspInstance.getSize(); i++) {
-//            for(int j = 0; j < tspInstance.getSize(); j++) {
-//                tspInstance.getNodePheromone()[i][j] = 1.0f/size;
-//            }
-//        }
-//
-//        return tspInstance;
-//    }
-
     // sets up ants on each node of the TSP -- currently we use as many ants as there are nodes in the tsp
     protected ArrayList<Ant> initializeAnts(TSP tspInstance) {
         ArrayList<Ant> ants = new ArrayList<>(); // list of our ants

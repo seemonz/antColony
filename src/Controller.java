@@ -279,27 +279,37 @@ public class Controller {
 
     public static void main(String[] args) throws IOException {
 //        // initialize cycleTSP
-////        TSP cycleTSP = readInData();
-////
-////        // init the antCycle object
-////        antCycle cycleTrail = new antCycle(cycleTSP);
-////
-////
-////        // iterate antCycle solutions
-////        for(int i = 0; i < 100; i++) {
-////            System.out.println("=================== ANT-CYCLE ===================");
-////            cycleTrail.cycle();
-////        }
+//        TSP cycleTSP = readInData();
+//
+//        // init the antCycle object
+//        antCycle cycleTrail = new antCycle(cycleTSP);
+//
+//
+//        // iterate antCycle solutions
+//        for(int i = 0; i < 100; i++) {
+//            System.out.println("=================== ANT-CYCLE ===================");
+//            cycleTrail.cycle();
+//        }
+//
+//        //ELITIST ====================
+//        // initialize cycleTSP
+//        TSP elitistTSP = readInData();
+//
+//        // init the antCycle object
+//        antElitist elitistTrail = new antElitist(elitistTSP);
+//
+//
+//        // iterate antCycle solutions
+//        elitistTrail.elitistCycleHelper(200);
 
-        //ELITIST ====================
-        // initialize cycleTSP
-        TSP elitistTSP = readInData();
+        // ANT-DENSITY =============
+        // init tsp
+        TSP densityTSP = readInData();
 
-        // init the antCycle object
-        antElitist elitistTrail = new antElitist(elitistTSP);
-
+        // init antDensity
+        AntDensity antDensity = new AntDensity(densityTSP);
 
         // iterate antCycle solutions
-        elitistTrail.elitistCycleHelper(200);
+        antDensity.cycle(100);
     }
 }
