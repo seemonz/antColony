@@ -278,16 +278,28 @@ public class Controller {
 //    }
 
     public static void main(String[] args) throws IOException {
-        // initialize TSP
-        TSP tspInstance = readInData();
+//        // initialize cycleTSP
+////        TSP cycleTSP = readInData();
+////
+////        // init the antCycle object
+////        antCycle cycleTrail = new antCycle(cycleTSP);
+////
+////
+////        // iterate antCycle solutions
+////        for(int i = 0; i < 100; i++) {
+////            System.out.println("=================== ANT-CYCLE ===================");
+////            cycleTrail.cycle();
+////        }
+
+        //ELITIST ====================
+        // initialize cycleTSP
+        TSP elitistTSP = readInData();
 
         // init the antCycle object
-        antCycle trial = new antCycle(tspInstance);
+        antElitist elitistTrail = new antElitist(elitistTSP);
 
 
         // iterate antCycle solutions
-        for(int i = 0; i < 1000; i++) {
-            trial.cycle();
-        }
+        elitistTrail.elitistCycleHelper(200);
     }
 }

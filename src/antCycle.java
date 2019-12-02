@@ -9,6 +9,8 @@ public class antCycle extends antSystem{
         super(tsp);
     }
 
+    private static final double pherParam = 1; // param for pheromone laying equation
+
     // evaporate some amount of the pheromone off all edges of the tsp, rate is a percentage ie 0.05 is 5%
     protected void evaporate(TSP tspInstance, float rate) {
         // decrease all pheromone on all edges by rate amount
@@ -47,21 +49,28 @@ public class antCycle extends antSystem{
         Ant shortestAnt = ants.get(shortestTourIndex);
         System.out.println("shortestTour: " + shortestTour);
         System.out.println("avgTour: " + tourSum/tspInstance.getSize());
-        // go through path of ant and lay down pheromone onto TSP
-        for(int i = 0; i < shortestAnt.getPath().length; i++) {
-            // if we are the last node, then we get edge back to start
-            if (i == shortestAnt.getPath().length - 1) {
-                int currentNode = shortestAnt.getPath()[i];
-                int nextNode = shortestAnt.getPath()[0];
-                double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
-                currentPher = currentPher + (1/shortestTour); // update pheromone
-                tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
-            } else {
-                int currentNode = shortestAnt.getPath()[i];
-                int nextNode = shortestAnt.getPath()[i+1];
-                double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
-                currentPher = currentPher + (1/shortestTour); // update pheromone
-                tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
+
+        // we lay down pheromone for each ant solution found
+        for(int i = 0; i < ants.size(); i++) {
+            Ant currentAnt = ants.get(i);
+            double currentTourLength = pathLength(tspInstance, currentAnt);
+
+            // go through path of ant and lay down pheromone onto TSP pheromone = Q/lengthOfPath
+            for(int k = 0; k < currentAnt.getPath().length; k++) {
+                // if we are the last node, then we get edge back to start
+                if (k == currentAnt.getPath().length - 1) {
+                    int currentNode = currentAnt.getPath()[k];
+                    int nextNode = currentAnt.getPath()[0];
+                    double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
+                    currentPher = currentPher + (pherParam/currentTourLength); // update pheromone
+                    tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
+                } else {
+                    int currentNode = currentAnt.getPath()[k];
+                    int nextNode = currentAnt.getPath()[k+1];
+                    double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
+                    currentPher = currentPher + (pherParam/currentTourLength); // update pheromone
+                    tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
+                }
             }
         }
 
