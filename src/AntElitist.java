@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 // elitist extends the cycle -- we lay down pheromone down after tour
 // we save the best-found-path so far and lay down pheromone on the edges of that path
-public class antElitist extends antCycle {
-    public antElitist(TSP tsp) {
+public class AntElitist extends AntCycle {
+    public AntElitist(TSP tsp) {
         super(tsp);
     }
 
@@ -24,7 +24,8 @@ public class antElitist extends antCycle {
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
             tourSum += pathLen;
-            System.out.println(pathLen);
+            // DEBUGGING
+//            System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen < shortestTour) {
@@ -41,9 +42,10 @@ public class antElitist extends antCycle {
             bestSoFar = shortestAnt;
         }
 
-        System.out.println("shortestTourPath: " + shortestTour);
-        System.out.println("bestSoFarTourPath: " + bestSoFarLength);
-        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
+        // DEBUGGING
+//        System.out.println("shortestTourPath: " + shortestTour);
+//        System.out.println("bestSoFarTourPath: " + bestSoFarLength);
+//        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
 
         // go through path of ant and lay down pheromone onto TSP
         for(int i = 0; i < shortestAnt.getPath().length; i++) {
@@ -83,7 +85,8 @@ public class antElitist extends antCycle {
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
             tourSum += pathLen;
-            System.out.println(pathLen);
+            // DEBUGGING
+//            System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen > longestTour) {
@@ -91,14 +94,15 @@ public class antElitist extends antCycle {
                 longestTourIndex = i;
             }
         }
-        System.out.println("init long tour: " + longestTour);
 
         // we init the cycle with an ant with no tour
         Ant initBestAnt = ants.get(longestTourIndex);
         Ant nextBestAnt = elitistCycle(initBestAnt);
         for(int i = 0; i < numOfCycles; i++) {
-            System.out.println("=================== ELITIST ===================");
             nextBestAnt = elitistCycle(nextBestAnt);
         }
+        System.out.println("=================== ELITIST ===================");
+        System.out.println("Number of iterations: " + numOfCycles);
+        System.out.println("BestSoFar : " + pathLength(tspInstance, nextBestAnt));
     }
 }

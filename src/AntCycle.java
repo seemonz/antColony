@@ -3,9 +3,9 @@ import java.util.ArrayList;
 // one of three working types of antSystems
 // this one lays down pheromone after the whole tour has been done
 // there are subClasses within this class where the pheromone laying is done differently
-public class antCycle extends antSystem{
+public class AntCycle extends AntSystem{
 
-    public antCycle(TSP tsp) {
+    public AntCycle(TSP tsp) {
         super(tsp);
     }
 
@@ -22,7 +22,7 @@ public class antCycle extends antSystem{
     }
 
     // cycle run ants on the tsp and update pheromone with solutions
-    public void cycle() {
+    private double cyclePrivate() {
         // initialize
         ArrayList<Ant> ants = new ArrayList<>();
         ants = initializeAnts(tspInstance);
@@ -36,7 +36,8 @@ public class antCycle extends antSystem{
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
             tourSum += pathLen;
-            System.out.println(pathLen);
+            // DEBUGGING
+            //System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen < shortestTour) {
@@ -47,8 +48,9 @@ public class antCycle extends antSystem{
 
         // lay pheromone based on shortestTour
         Ant shortestAnt = ants.get(shortestTourIndex);
-        System.out.println("shortestTour: " + shortestTour);
-        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
+        // DEBUGGING
+//        System.out.println("shortestTour: " + shortestTour);
+//        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
 
         // we lay down pheromone for each ant solution found
         for(int i = 0; i < ants.size(); i++) {
@@ -76,5 +78,21 @@ public class antCycle extends antSystem{
 
         // apply evaporation to the tsp
         evaporate(tspInstance, 0.08f);
+        return shortestTour;
+    }
+
+    public void cycle(int numOfCycles) {
+        double bestSoFar = 1000000000;
+
+        // we init the cycle with an ant with no tour
+        for(int i = 0; i < numOfCycles; i++) {
+            double currentShortestPath = cyclePrivate();
+            if(bestSoFar > currentShortestPath) {
+                bestSoFar = currentShortestPath;
+            }
+        }
+        System.out.println("=================== ANT-CYCLE ===================");
+        System.out.println("Number of iterations: " + numOfCycles);
+        System.out.println("BestSoFar : " + bestSoFar);
     }
 }

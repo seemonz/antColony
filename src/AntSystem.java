@@ -8,11 +8,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // the base class that runs the basic system -- everything else is an extension of this
-abstract class antSystem {
+abstract class AntSystem {
     TSP tspInstance;
 
     // constructor
-    public antSystem(TSP tsp) {
+    public AntSystem(TSP tsp) {
         this.tspInstance = tsp;
     }
 

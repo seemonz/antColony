@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 // a variation of the antSystem -- it lays down a fixed amount of pheromone locally (at each edge traversal)
-public class AntDensity extends antSystem {
+public class AntDensity extends AntSystem {
     public AntDensity(TSP tsp) {
         super(tsp);
     }
@@ -42,7 +42,8 @@ public class AntDensity extends antSystem {
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
             tourSum += pathLen;
-            System.out.println(pathLen);
+            // DEBUGGING
+//            System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen < shortestTour) {
@@ -53,9 +54,10 @@ public class AntDensity extends antSystem {
 
         // lay pheromone based on shortestTour
         Ant shortestAnt = ants.get(shortestTourIndex);
-        System.out.println("=================== ANT-DENSITY ===================");
-        System.out.println("shortestTour: " + shortestTour);
-        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
+        // DEBUGGING
+//        System.out.println("=================== ANT-DENSITY ===================");
+//        System.out.println("shortestTour: " + shortestTour);
+//        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
         return shortestTour;
     }
 
@@ -70,6 +72,8 @@ public class AntDensity extends antSystem {
             }
         }
 
+        System.out.println("=================== ANT-DENSITY ===================");
+        System.out.println("Number of iterations: " + numOfCycles);
         System.out.println("Best Tour found: " + bestSoFarTour);
     }
 }
