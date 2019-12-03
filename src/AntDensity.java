@@ -2,12 +2,15 @@ import java.util.ArrayList;
 
 // a variation of the antSystem -- it lays down a fixed amount of pheromone locally (at each edge traversal)
 public class AntDensity extends AntSystem {
-    // constructor
-    public AntDensity(TSP tsp) {
-        super(tsp);
-    }
+    float evaporationParam;
+    double fixedPheromone; // the fixed amount of pheromone that is layed down on each edge traversal
 
-    private static final double fixedPheromone = 0.05; // the fixed amount of pheromone that is layed down on each edge traversal
+    // constructor
+    public AntDensity(TSP tsp, float alpha, float beta, float evaporationParam, double fixedPheromone) {
+        super(tsp, alpha, beta);
+        this.evaporationParam = evaporationParam;
+        this.fixedPheromone = fixedPheromone;
+    }
 
     @Override // we override the antSystem version of stepAnts, we are going to implement pheromone laying during each step
     protected void stepAnts(TSP tspInstance, ArrayList<Ant> ants) {
@@ -69,12 +72,12 @@ public class AntDensity extends AntSystem {
 //        System.out.println("=================== ANT-DENSITY ===================");
 //        System.out.println("shortestTour: " + shortestTour);
 //        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
-        evaporate(tspInstance, 0.08f);
+        evaporate(tspInstance, evaporationParam);
         return shortestTour;
     }
 
 
-    public void cycle(int numOfCycles) {
+    public double cycle(int numOfCycles) {
         double bestSoFarTour = 100000000;
 
         for(int i = 0; i < numOfCycles; i ++) {
@@ -84,8 +87,11 @@ public class AntDensity extends AntSystem {
             }
         }
 
-        System.out.println("=================== ANT-DENSITY ===================");
-        System.out.println("Number of iterations: " + numOfCycles);
-        System.out.println("Best Tour found: " + bestSoFarTour);
+        // DEBUGGING
+//        System.out.println("=================== ANT-DENSITY ===================");
+//        System.out.println("Number of iterations: " + numOfCycles);
+//        System.out.println("Best Tour found: " + bestSoFarTour);
+
+        return bestSoFarTour;
     }
 }

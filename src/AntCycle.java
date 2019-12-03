@@ -4,12 +4,16 @@ import java.util.ArrayList;
 // this one lays down pheromone after the whole tour has been done
 // there are subClasses within this class where the pheromone laying is done differently
 public class AntCycle extends AntSystem{
+    float evaporationParam;
+    double pherParam; // param for pheromone laying equation -- 4 works well
+
     //constructor
-    public AntCycle(TSP tsp) {
-        super(tsp);
+    public AntCycle(TSP tsp, float alpha, float beta, float evaporationParam, double pherParam) {
+        super(tsp, alpha, beta);
+        this.evaporationParam = evaporationParam;
+        this.pherParam = pherParam;
     }
 
-    private static final double pherParam = 4; // param for pheromone laying equation
 
     // evaporate some amount of the pheromone off all edges of the tsp, rate is a percentage ie 0.05 is 5%
     protected void evaporate(TSP tspInstance, float rate) {
@@ -77,11 +81,11 @@ public class AntCycle extends AntSystem{
         }
 
         // apply evaporation to the tsp
-        evaporate(tspInstance, 0.08f);
+        evaporate(tspInstance, evaporationParam);
         return shortestTour;
     }
 
-    public void cycle(int numOfCycles) {
+    public double cycle(int numOfCycles) {
         double bestSoFar = 1000000000;
 
         // we init the cycle with an ant with no tour
@@ -91,8 +95,11 @@ public class AntCycle extends AntSystem{
                 bestSoFar = currentShortestPath;
             }
         }
-        System.out.println("=================== ANT-CYCLE ===================");
-        System.out.println("Number of iterations: " + numOfCycles);
-        System.out.println("BestSoFar : " + bestSoFar);
+        // DEBUGGING
+//        System.out.println("=================== ANT-CYCLE ===================");
+//        System.out.println("Number of iterations: " + numOfCycles);
+//        System.out.println("BestSoFar : " + bestSoFar);
+
+        return bestSoFar;
     }
 }

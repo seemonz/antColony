@@ -3,11 +3,11 @@ import java.util.ArrayList;
 // MaxMin style ant system uses a variety of approaches to find a solution
 public class AntMaxMin extends AntCycle {
     // constructor
-    public AntMaxMin(TSP tsp) {
-        super(tsp);
+    public AntMaxMin(TSP tsp, float alpha, float beta, float evaporationParam, double pherParam) {
+        super(tsp, alpha, beta, evaporationParam, pherParam);
     }
 
-    private static final double pherParam = 2; // param for pheromone laying equation
+//    private static final double pherParam = 2; // param for pheromone laying equation
     private static final double minPheromone = 0.001; // min value of pheromone
     private static final double maxPheromone = 0.5; // max value of pheromone
 
@@ -66,7 +66,7 @@ public class AntMaxMin extends AntCycle {
         }
 
         // apply evaporation to the tsp
-        evaporate(tspInstance, 0.05f);
+        evaporate(tspInstance, evaporationParam);
         return shortestTour; // we return the shortestPath Ant of this iteration
     }
 
@@ -80,7 +80,7 @@ public class AntMaxMin extends AntCycle {
     }
 
     // this checks for min/max and sets pheromone value
-    private static void pheromoneSetter(TSP tspInstance, int currentNode, int nextNode, double tourLength) {
+    private void pheromoneSetter(TSP tspInstance, int currentNode, int nextNode, double tourLength) {
         double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
         double setPher = 0;
 
@@ -124,7 +124,7 @@ public class AntMaxMin extends AntCycle {
         return stagnated;
     }
 
-    public void maxMinCycler(int numOfCycles) {
+    public double cycleMaxMin(int numOfCycles) {
 
         // finds a long tour we can feed into the elitistCycle
         ArrayList<Ant> ants = new ArrayList<>();
@@ -162,8 +162,11 @@ public class AntMaxMin extends AntCycle {
                 shortestTour = currentTour;
             }
         }
-        System.out.println("=================== MAX-MIN ===================");
-        System.out.println("Number of iterations: " + numOfCycles);
-        System.out.println("BestSoFar : " + shortestTour);
+        // DEBUGGING
+//        System.out.println("=================== MAX-MIN ===================");
+//        System.out.println("Number of iterations: " + numOfCycles);
+//        System.out.println("BestSoFar : " + shortestTour);
+
+        return shortestTour;
     }
 }

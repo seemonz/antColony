@@ -2,13 +2,18 @@ import java.util.ArrayList;
 
 // AntQuantity applies pheromone locally (each edge traversal) based on the distance of the edge (inversely proportional to distance)
 public class AntQuantity extends AntSystem {
+    float evaporationaParam;
+    double pherParam;
+
     // constructor
-    public AntQuantity(TSP tsp) {
-        super(tsp);
+    public AntQuantity(TSP tsp, float alpha, float beta, float evaporationaParam, double pherParam) {
+        super(tsp, alpha, beta);
+        this.evaporationaParam = evaporationaParam;
+        this.pherParam = pherParam;
     }
 
 
-    private static final double pheromoneParam = 4; // parameter for the pheromone laying eqn
+//    private static final double pherParam = 4; // parameter for the pheromone laying eqn
 
     @Override // we override the antSystem version of stepAnts, we are going to implement pheromone laying during each step
     protected void stepAnts(TSP tspInstance, ArrayList<Ant> ants) {
@@ -27,7 +32,7 @@ public class AntQuantity extends AntSystem {
 
             // lay fixed pheromone amount down on the edge traversed by ant
             double distOfEdge = tspInstance.getNodeDistances()[currentNodeAntIndex][currentChoice]; // this is the distance of the edge
-            tspInstance.getNodePheromone()[currentNodeAntIndex][currentChoice] += pheromoneParam/distOfEdge; // we lay the pheromone down as a value inversely proportional to the distance of the edge
+            tspInstance.getNodePheromone()[currentNodeAntIndex][currentChoice] += pherParam/distOfEdge; // we lay the pheromone down as a value inversely proportional to the distance of the edge
         }
     }
 
@@ -68,12 +73,12 @@ public class AntQuantity extends AntSystem {
         }
 
         Ant shortestAnt = ants.get(shortestTourIndex);
-        evaporate(tspInstance, 0.03f);
+        evaporate(tspInstance, evaporationaParam); // 0.03 was the val
         return shortestTour;
     }
 
 
-    public void cycle(int numOfCycles) {
+    public double cycle(int numOfCycles) {
         double bestSoFarTour = 100000000;
 
         for(int i = 0; i < numOfCycles; i ++) {
@@ -83,8 +88,11 @@ public class AntQuantity extends AntSystem {
             }
         }
 
-        System.out.println("=================== ANT-QUANTITY ===================");
-        System.out.println("Number of iterations: " + numOfCycles);
-        System.out.println("Best Tour found: " + bestSoFarTour);
+        // DEBUGGING
+//        System.out.println("=================== ANT-QUANTITY ===================");
+//        System.out.println("Number of iterations: " + numOfCycles);
+//        System.out.println("Best Tour found: " + bestSoFarTour);
+
+        return bestSoFarTour;
     }
 }

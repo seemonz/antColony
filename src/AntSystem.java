@@ -10,15 +10,19 @@ import java.util.regex.Pattern;
 // the base class that runs the basic system -- everything else is an extension of this
 abstract class AntSystem {
     TSP tspInstance;
+    float alpha; // parameter for weighting the pheromone
+    float beta; // parameter for weighting the distance heuristic
 
     // constructor
-    public AntSystem(TSP tsp) {
+    public AntSystem(TSP tsp, float alpha, float beta) {
         this.tspInstance = tsp;
+        this.alpha = alpha; // parameter for weighting the pheromone
+        this.beta = beta; // parameter for weighting the distance heuristic
     }
 
     // if we set either to 1 then that one isn't considered in the probability function
-    private static float alpha = 1.0f; // parameter for weighting the pheromone
-    private static float beta = 5.0f; // parameter for weighting the distance heuristic
+//    private static float alpha = 1.0f; // parameter for weighting the pheromone
+//    private static float beta = 5.0f; // parameter for weighting the distance heuristic
 
     // sets up ants on each node of the TSP -- currently we use as many ants as there are nodes in the tsp
     protected ArrayList<Ant> initializeAnts(TSP tspInstance) {

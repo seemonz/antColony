@@ -3,11 +3,11 @@ import java.util.ArrayList;
 // elitist extends the cycle -- we lay down pheromone down after tour
 // we save the best-found-path so far and lay down pheromone on the edges of that path
 public class AntElitist extends AntCycle {
-    public AntElitist(TSP tsp) {
-        super(tsp);
+    public AntElitist(TSP tsp, float alpha, float beta, float evaporationParam, double pherParam) {
+        super(tsp, alpha, beta, evaporationParam, pherParam);
     }
 
-    private static final double pherParam = 2; // param for pheromone laying equation
+//    private static final double pherParam = 2; // param for pheromone laying equation
 
     // cycle run ants on the tsp and update pheromone with solutions
     private Ant elitistCycle(Ant bestSoFar) {
@@ -66,11 +66,11 @@ public class AntElitist extends AntCycle {
         }
 
         // apply evaporation to the tsp
-        evaporate(tspInstance, 0.03f);
+        evaporate(tspInstance, evaporationParam);
         return bestSoFar; // we return the shortestPath Ant of this iteration
     }
 
-    public void elitistCycleHelper(int numOfCycles) {
+    public double cycleElite(int numOfCycles) {
 
         // finds a long tour we can feed into the elitistCycle
         ArrayList<Ant> ants = new ArrayList<>();
@@ -101,8 +101,12 @@ public class AntElitist extends AntCycle {
         for(int i = 0; i < numOfCycles; i++) {
             nextBestAnt = elitistCycle(nextBestAnt);
         }
-        System.out.println("=================== ELITIST ===================");
-        System.out.println("Number of iterations: " + numOfCycles);
-        System.out.println("BestSoFar : " + pathLength(tspInstance, nextBestAnt));
+
+        // DEBUGGING
+//        System.out.println("=================== ELITIST ===================");
+//        System.out.println("Number of iterations: " + numOfCycles);
+//        System.out.println("BestSoFar : " + pathLength(tspInstance, nextBestAnt));
+
+        return pathLength(tspInstance, nextBestAnt);
     }
 }
