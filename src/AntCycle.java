@@ -4,12 +4,12 @@ import java.util.ArrayList;
 // this one lays down pheromone after the whole tour has been done
 // there are subClasses within this class where the pheromone laying is done differently
 public class AntCycle extends AntSystem{
-
+    //constructor
     public AntCycle(TSP tsp) {
         super(tsp);
     }
 
-    private static final double pherParam = 1; // param for pheromone laying equation
+    private static final double pherParam = 4; // param for pheromone laying equation
 
     // evaporate some amount of the pheromone off all edges of the tsp, rate is a percentage ie 0.05 is 5%
     protected void evaporate(TSP tspInstance, float rate) {

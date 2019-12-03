@@ -286,7 +286,7 @@ public class Controller {
         AntDensity antDensity = new AntDensity(densityTSP);
 
         // iterate antCycle solutions
-        antDensity.cycle(400);
+        antDensity.cycle(200);
 
         // ANT-QUANTITY =============
         // init tsp
@@ -296,7 +296,7 @@ public class Controller {
         AntQuantity antQuantity = new AntQuantity(quantityTSP);
 
         // iterate antCycle solutions
-        antQuantity.cycle(400);
+        antQuantity.cycle(200);
 
         // ANT-CYCLE =============
         // initialize cycleTSP
@@ -305,7 +305,7 @@ public class Controller {
         // init the antCycle object
         AntCycle cycleTrail = new AntCycle(cycleTSP);
 
-        cycleTrail.cycle(400);
+        cycleTrail.cycle(200);
 
         //ELITIST ====================
         // initialize cycleTSP
@@ -315,6 +315,16 @@ public class Controller {
         AntElitist elitistTrail = new AntElitist(elitistTSP);
 
         // iterate antCycle solutions
-        elitistTrail.elitistCycleHelper(400);
+        elitistTrail.elitistCycleHelper(200);
+
+        //MAX-MIN ====================
+        // initialize cycleTSP
+        TSP maxMinTSP = readInData();
+
+        // init the antCycle object
+        AntMaxMin maxMinTrail = new AntMaxMin(maxMinTSP);
+
+        // iterate antCycle solutions
+        maxMinTrail.maxMinCycler(200);
     }
 }

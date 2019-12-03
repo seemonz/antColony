@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 // a variation of the antSystem -- it lays down a fixed amount of pheromone locally (at each edge traversal)
 public class AntDensity extends AntSystem {
+    // constructor
     public AntDensity(TSP tsp) {
         super(tsp);
     }
@@ -25,6 +26,16 @@ public class AntDensity extends AntSystem {
 
             // lay fixed pheromone amount down on the edge traversed by ant
             tspInstance.getNodePheromone()[currentNodeAntIndex][currentChoice] += fixedPheromone;
+        }
+    }
+
+    // evaporate some amount of the pheromone off all edges of the tsp, rate is a percentage ie 0.05 is 5%
+    protected void evaporate(TSP tspInstance, float rate) {
+        // decrease all pheromone on all edges by rate amount
+        for(int i = 0; i < tspInstance.getSize(); i++) {
+            for(int j = 0; j < tspInstance.getSize(); j++) {
+                tspInstance.getNodePheromone()[i][j] = tspInstance.getNodePheromone()[i][j]*(1.0f - rate);
+            }
         }
     }
 
@@ -58,6 +69,7 @@ public class AntDensity extends AntSystem {
 //        System.out.println("=================== ANT-DENSITY ===================");
 //        System.out.println("shortestTour: " + shortestTour);
 //        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
+        evaporate(tspInstance, 0.08f);
         return shortestTour;
     }
 

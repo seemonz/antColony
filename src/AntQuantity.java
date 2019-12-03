@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
-// AntQuantity applies pheromone locally (each edge traversal) based on the distance of the edge
+// AntQuantity applies pheromone locally (each edge traversal) based on the distance of the edge (inversely proportional to distance)
 public class AntQuantity extends AntSystem {
+    // constructor
     public AntQuantity(TSP tsp) {
         super(tsp);
     }
@@ -30,6 +31,16 @@ public class AntQuantity extends AntSystem {
         }
     }
 
+    // evaporate some amount of the pheromone off all edges of the tsp, rate is a percentage ie 0.05 is 5%
+    protected void evaporate(TSP tspInstance, float rate) {
+        // decrease all pheromone on all edges by rate amount
+        for(int i = 0; i < tspInstance.getSize(); i++) {
+            for(int j = 0; j < tspInstance.getSize(); j++) {
+                tspInstance.getNodePheromone()[i][j] = tspInstance.getNodePheromone()[i][j]*(1.0f - rate);
+            }
+        }
+    }
+
     private double cyclePrivate() {
         // initialize
         ArrayList<Ant> ants = new ArrayList<>();
@@ -55,6 +66,7 @@ public class AntQuantity extends AntSystem {
         }
 
         Ant shortestAnt = ants.get(shortestTourIndex);
+        evaporate(tspInstance, 0.08f);
         return shortestTour;
     }
 
