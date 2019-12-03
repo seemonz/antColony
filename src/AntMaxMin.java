@@ -61,8 +61,17 @@ public class AntMaxMin extends AntCycle {
         }
 
         // apply evaporation to the tsp
-        evaporate(tspInstance, 0.03f);
+        evaporate(tspInstance, 0.05f);
         return shortestTour; // we return the shortestPath Ant of this iteration
+    }
+
+    // initializes the pheromone to maxPheromone
+    private void pheromoneInitializer() {
+        for(int i = 0; i < tspInstance.getSize(); i++) {
+            for(int k = 0; k < tspInstance.getSize(); k++) {
+               tspInstance.getNodePheromone()[i][k] = maxPheromone;
+            }
+        }
     }
 
     // this checks for min/max and sets pheromone value
@@ -86,6 +95,9 @@ public class AntMaxMin extends AntCycle {
         // finds a long tour we can feed into the elitistCycle
         ArrayList<Ant> ants = new ArrayList<>();
         ants = initializeAnts(tspInstance);
+
+        // init pheromone lvls on the tspInstance
+        pheromoneInitializer();
 
         double longestTour = 1;
         int longestTourIndex = 0;

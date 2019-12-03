@@ -278,6 +278,9 @@ public class Controller {
 //    }
 
     public static void main(String[] args) throws IOException {
+
+        int numCycles = 250;
+
         // ANT-DENSITY =============
         // init tsp
         TSP densityTSP = readInData();
@@ -286,7 +289,7 @@ public class Controller {
         AntDensity antDensity = new AntDensity(densityTSP);
 
         // iterate antCycle solutions
-        antDensity.cycle(200);
+        antDensity.cycle(numCycles);
 
         // ANT-QUANTITY =============
         // init tsp
@@ -296,7 +299,7 @@ public class Controller {
         AntQuantity antQuantity = new AntQuantity(quantityTSP);
 
         // iterate antCycle solutions
-        antQuantity.cycle(200);
+        antQuantity.cycle(numCycles);
 
         // ANT-CYCLE =============
         // initialize cycleTSP
@@ -305,7 +308,7 @@ public class Controller {
         // init the antCycle object
         AntCycle cycleTrail = new AntCycle(cycleTSP);
 
-        cycleTrail.cycle(200);
+        cycleTrail.cycle(numCycles);
 
         //ELITIST ====================
         // initialize cycleTSP
@@ -315,7 +318,7 @@ public class Controller {
         AntElitist elitistTrail = new AntElitist(elitistTSP);
 
         // iterate antCycle solutions
-        elitistTrail.elitistCycleHelper(200);
+        elitistTrail.elitistCycleHelper(numCycles);
 
         //MAX-MIN ====================
         // initialize cycleTSP
@@ -325,6 +328,6 @@ public class Controller {
         AntMaxMin maxMinTrail = new AntMaxMin(maxMinTSP);
 
         // iterate antCycle solutions
-        maxMinTrail.maxMinCycler(200);
+        maxMinTrail.maxMinCycler(numCycles);
     }
 }
