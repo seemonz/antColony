@@ -41,9 +41,14 @@ public class AntMaxMin extends AntCycle {
 
         Ant shortestAnt = ants.get(shortestTourIndex);
 
+        if(stagnationChecker(tspInstance, ants)) {
+//            System.out.println("we have stagnated -- RESET PHEROMONE");
+            pheromoneInitializer();
+        }
+
         // DEBUGGING
+//        System.out.println("=================== MAX-MIN ===================");
 //        System.out.println("shortestTourPath: " + shortestTour);
-//        System.out.println("bestSoFarTourPath: " + bestSoFarLength);
 //        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
 
         // go through path of ant and lay down pheromone onto TSP
@@ -90,6 +95,35 @@ public class AntMaxMin extends AntCycle {
         tspInstance.getNodePheromone()[currentNode][nextNode] = setPher;
     }
 
+    private boolean stagnationChecker(TSP tspInstance, ArrayList<Ant> ants) {
+        boolean stagnated = false;
+        int count = 0;  // tracks the number of antPaths that have converged
+        // for ants we check each pathLength against the next one
+        for(int i = 0; i < ants.size() - 1; i++) {
+            count  = 0;
+            double currentLength = pathLength(this.tspInstance, ants.get(i));
+            for(int j = 0; j < ants.size(); j++) {
+                if( j != i) {
+                    double nextLength = pathLength(this.tspInstance, ants.get(j));
+                    double difference = Math.abs(currentLength - nextLength);
+
+                    // if our two values almost equal one another then we have two antPaths that have converged
+                    if(0 < difference && difference < 2) {
+                        count++;
+                    }
+
+                    // if our count of converged ants is 3/4 of all ants then we have stagnated
+                    if(count > 0.4*ants.size()) {
+                        stagnated = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return stagnated;
+    }
+
     public void maxMinCycler(int numOfCycles) {
 
         // finds a long tour we can feed into the elitistCycle
@@ -109,7 +143,7 @@ public class AntMaxMin extends AntCycle {
             double pathLen = pathLength(tspInstance, anty);
             tourSum += pathLen;
             // DEBUGGING
-//            System.out.println(pathLen);
+            //System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen > longestTour) {
@@ -117,6 +151,7 @@ public class AntMaxMin extends AntCycle {
                 longestTourIndex = i;
             }
         }
+
 
         // we init the cycle with an ant with no tour
         Ant initBestAnt = ants.get(longestTourIndex);

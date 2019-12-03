@@ -46,6 +46,8 @@ public class AntQuantity extends AntSystem {
         ArrayList<Ant> ants = new ArrayList<>();
         ants = initializeAnts(tspInstance);
 
+        // DEBUGGING
+//        System.out.println("=================== ANT-QUANTITY ===================");
         double shortestTour = 1000000;
         int shortestTourIndex = 0;
         double tourSum = 0;
@@ -66,7 +68,7 @@ public class AntQuantity extends AntSystem {
         }
 
         Ant shortestAnt = ants.get(shortestTourIndex);
-        evaporate(tspInstance, 0.08f);
+        evaporate(tspInstance, 0.03f);
         return shortestTour;
     }
 

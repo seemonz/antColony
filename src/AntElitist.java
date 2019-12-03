@@ -48,19 +48,19 @@ public class AntElitist extends AntCycle {
 //        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
 
         // go through path of bestSoFarAnt and lay down pheromone of it's path onto TSP
-        for(int i = 0; i < shortestAnt.getPath().length; i++) {
+        for(int i = 0; i < bestSoFar.getPath().length; i++) {
             // if we are the last node, then we get edge back to start
-            if (i == shortestAnt.getPath().length - 1) {
-                int currentNode = shortestAnt.getPath()[i];
-                int nextNode = shortestAnt.getPath()[0];
+            if (i == bestSoFar.getPath().length - 1) {
+                int currentNode = bestSoFar.getPath()[i];
+                int nextNode = bestSoFar.getPath()[0];
                 double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
-                currentPher = currentPher + (pherParam/shortestTour); // update pheromone
+                currentPher = currentPher + (pherParam/bestSoFarLength); // update pheromone
                 tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
             } else {
-                int currentNode = shortestAnt.getPath()[i];
-                int nextNode = shortestAnt.getPath()[i+1];
+                int currentNode = bestSoFar.getPath()[i];
+                int nextNode = bestSoFar.getPath()[i+1];
                 double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
-                currentPher = currentPher + (pherParam/shortestTour); // update pheromone
+                currentPher = currentPher + (pherParam/bestSoFarLength); // update pheromone
                 tspInstance.getNodePheromone()[currentNode][nextNode] = currentPher;
             }
         }

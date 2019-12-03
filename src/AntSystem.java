@@ -18,7 +18,7 @@ abstract class AntSystem {
 
     // if we set either to 1 then that one isn't considered in the probability function
     private static float alpha = 1.0f; // parameter for weighting the pheromone
-    private static float beta = 1.0f; // parameter for weighting the distance heuristic
+    private static float beta = 5.0f; // parameter for weighting the distance heuristic
 
     // sets up ants on each node of the TSP -- currently we use as many ants as there are nodes in the tsp
     protected ArrayList<Ant> initializeAnts(TSP tspInstance) {
