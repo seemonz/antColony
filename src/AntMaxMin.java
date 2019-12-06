@@ -7,30 +7,25 @@ public class AntMaxMin extends AntCycle {
         super(tsp, alpha, beta, evaporationParam, pherParam);
     }
 
-//    private static final double pherParam = 2; // param for pheromone laying equation
+    // two const control the range of the pheromone
     private static final double minPheromone = 0.001; // min value of pheromone
     private static final double maxPheromone = 0.5; // max value of pheromone
 
-    // cycle run ants on the tsp and update pheromone with solutions
-    // we use the tours shortest solution to lay the pheromone down on
+    // cycle runs ants on the TSP and uses the cycle-best tour to deposit pheromone
     private double maxMinCycle() {
         // initialize ants
-        ArrayList<Ant> ants = new ArrayList<>();
-        ants = initializeAnts(tspInstance);
+        ArrayList<Ant> ants = initializeAnts(tspInstance);
 
         // init shortestTour measures
         double shortestTour = 1000000;
         int shortestTourIndex = 0;
-        double tourSum = 0;
 
-        // run solver
-        findSolutions(tspInstance, ants);
+        findSolutions(tspInstance, ants); // finds tours for all ants
+
+        // iterate through ants list and find shortestTour
         for (int i = 0; i < ants.size(); i++) {
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
-            tourSum += pathLen;
-            // DEBUGGING
-//            System.out.println(pathLen);
 
             // find shortestTour
             if (pathLen < shortestTour) {
@@ -41,19 +36,14 @@ public class AntMaxMin extends AntCycle {
 
         Ant shortestAnt = ants.get(shortestTourIndex);
 
+        // checks to see how many of the ants paths have converged, if they have then re-init the pheromone on the TSP
         if(stagnationChecker(tspInstance, ants)) {
-//            System.out.println("we have stagnated -- RESET PHEROMONE");
             pheromoneInitializer();
         }
 
-        // DEBUGGING
-//        System.out.println("=================== MAX-MIN ===================");
-//        System.out.println("shortestTourPath: " + shortestTour);
-//        System.out.println("avgTour: " + tourSum/tspInstance.getSize());
-
-        // go through path of ant and lay down pheromone onto TSP
+        // go through path of cycle-best Ant and deposit pheromone of it's path onto TSP
         for (int i = 0; i < shortestAnt.getPath().length; i++) {
-            // if we are the last node, then we get edge back to start
+            // if last node, then get edge that goes from currentNode to startingNode
             if (i == shortestAnt.getPath().length - 1) {
                 int currentNode = shortestAnt.getPath()[i];
                 int nextNode = shortestAnt.getPath()[0];
@@ -65,9 +55,9 @@ public class AntMaxMin extends AntCycle {
             }
         }
 
-        // apply evaporation to the tsp
+        // apply evaporation to the TSP
         evaporate(tspInstance, evaporationParam);
-        return shortestTour; // we return the shortestPath Ant of this iteration
+        return shortestTour; // return the shortestPath Ant of this iteration
     }
 
     // initializes the pheromone to maxPheromone
@@ -79,26 +69,27 @@ public class AntMaxMin extends AntCycle {
         }
     }
 
-    // this checks for min/max and sets pheromone value
+    // checks for min/max and sets pheromone value
     private void pheromoneSetter(TSP tspInstance, int currentNode, int nextNode, double tourLength) {
         double currentPher = tspInstance.getNodePheromone()[currentNode][nextNode];  // grab pheromone
         double setPher = 0;
 
-        if(currentPher <= minPheromone) { // we are at minPheromone, stay there
+        if(currentPher <= minPheromone) { // currentPheromone is at minPheromone, stay there
             setPher = minPheromone;
-        }else if(currentPher >= maxPheromone) { // we are at maxPheromone, stay there
+        }else if(currentPher >= maxPheromone) { // currentPheromone is at maxPheromone, stay there
             setPher = maxPheromone;
         }else{
             setPher = currentPher + (pherParam / tourLength); // somewhere between min/max, set the new pheromone
         }
 
-        tspInstance.getNodePheromone()[currentNode][nextNode] = setPher;
+        tspInstance.getNodePheromone()[currentNode][nextNode] = setPher; // set the pheromone
     }
 
+    // checks if ants tours are converging too much and returns boolean value
     private boolean stagnationChecker(TSP tspInstance, ArrayList<Ant> ants) {
         boolean stagnated = false;
         int count = 0;  // tracks the number of antPaths that have converged
-        // for ants we check each pathLength against the next one
+        // for ants check each pathLength against the next one
         for(int i = 0; i < ants.size() - 1; i++) {
             count  = 0;
             double currentLength = pathLength(this.tspInstance, ants.get(i));
@@ -107,12 +98,12 @@ public class AntMaxMin extends AntCycle {
                     double nextLength = pathLength(this.tspInstance, ants.get(j));
                     double difference = Math.abs(currentLength - nextLength);
 
-                    // if our two values almost equal one another then we have two antPaths that have converged
+                    // if the two values almost equal (range -2 to +2) one another then the two antPaths that have converged
                     if(0 < difference && difference < 2) {
                         count++;
                     }
 
-                    // if our count of converged ants is 3/4 of all ants then we have stagnated
+                    // if the count of converged ants is  > 0.4 of all ants then stagnation
                     if(count > 0.4*ants.size()) {
                         stagnated = true;
                         break;
@@ -124,26 +115,26 @@ public class AntMaxMin extends AntCycle {
         return stagnated;
     }
 
+
+    // public cycle function -- tracks the best-so-far tour and returns it
+    // input: numOfCycles
     public double cycleMaxMin(int numOfCycles) {
 
-        // finds a long tour we can feed into the elitistCycle
-        ArrayList<Ant> ants = new ArrayList<>();
-        ants = initializeAnts(tspInstance);
+        // finds a long tour that can be fed into the elitistCycle
+        ArrayList<Ant> ants = initializeAnts(tspInstance);
 
         // init pheromone lvls on the tspInstance
         pheromoneInitializer();
 
         double longestTour = 1;
         int longestTourIndex = 0;
-        double tourSum = 0;
-        // run solver
-        findSolutions(tspInstance, ants);
+
+        findSolutions(tspInstance, ants); // finds tours for all ants
+
+        // iterate through ants tours and set shortest
         for(int i = 0; i < ants.size(); i++) {
             Ant anty = ants.get(i);
             double pathLen = pathLength(tspInstance, anty);
-            tourSum += pathLen;
-            // DEBUGGING
-            //System.out.println(pathLen);
 
             // find shortestTour
             if(pathLen > longestTour) {
@@ -153,8 +144,7 @@ public class AntMaxMin extends AntCycle {
         }
 
 
-        // we init the cycle with an ant with no tour
-        Ant initBestAnt = ants.get(longestTourIndex);
+        // init the cycle with an ant with no tour
         double shortestTour = 1000000000;
         for(int i = 0; i < numOfCycles; i++) {
             double currentTour = maxMinCycle();
@@ -162,10 +152,6 @@ public class AntMaxMin extends AntCycle {
                 shortestTour = currentTour;
             }
         }
-        // DEBUGGING
-//        System.out.println("=================== MAX-MIN ===================");
-//        System.out.println("Number of iterations: " + numOfCycles);
-//        System.out.println("BestSoFar : " + shortestTour);
 
         return shortestTour;
     }
