@@ -1,11 +1,6 @@
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Random;
 
 // manages Ant, TSP and initializing
 public class Controller {
@@ -77,7 +72,7 @@ public class Controller {
     //  alpha: the weight given to the pheromone value in the ant decision eqn, 1.0 to 5.0 range
     //  beta: the weight given to the shortestEdge value in the ant decision eqn, 1.0 to 5.0 range
     //  evaporationParam: the amount of evaporation that happens at the end of every tour, 0.0 to 1.0 range
-    //  pherParam: the pheromone normalizer value
+    //  pherParam [Q]: the pheromone normalizer value which in the paper we refer to as Q
     private static void runSystem(int antChoice, float alpha, float beta, float evaporationParam, double pherParam, int numOfCycles, int numOfRuns) throws IOException {
 
         switch(antChoice) {
@@ -110,6 +105,7 @@ public class Controller {
                 System.out.println("Number of cycles: " + numOfCycles);
                 System.out.println("Best Tour found: " + bestTourOfRun);
                 System.out.println("AvgBestTour: " + tourSums/numOfRuns );
+                System.out.println();
                 break;
 
             case 1: // antQuantity
@@ -141,6 +137,7 @@ public class Controller {
                 System.out.println("Number of cycles: " + numOfCycles);
                 System.out.println("Best Tour found: " + bestTourOfRun);
                 System.out.println("AvgBestTour: " + tourSums/numOfRuns );
+                System.out.println();
                 break;
 
             case 2: // antCycle
@@ -172,6 +169,7 @@ public class Controller {
                 System.out.println("Number of cycles: " + numOfCycles);
                 System.out.println("Best Tour found: " + bestTourOfRun);
                 System.out.println("AvgBestTour: " + tourSums/numOfRuns );
+                System.out.println();
                 break;
 
             case 3: // antElitist
@@ -203,6 +201,7 @@ public class Controller {
                 System.out.println("Number of cycles: " + numOfCycles);
                 System.out.println("Best Tour found: " + bestTourOfRun);
                 System.out.println("AvgBestTour: " + tourSums/numOfRuns );
+                System.out.println();
                 break;
 
             case 4: // antMaxMin
@@ -234,6 +233,7 @@ public class Controller {
                 System.out.println("Number of cycles: " + numOfCycles);
                 System.out.println("Best Tour found: " + bestTourOfRun);
                 System.out.println("AvgBestTour: " + tourSums/numOfRuns );
+                System.out.println();
                 break;
 
 
@@ -245,71 +245,21 @@ public class Controller {
     public static void main(String[] args) throws IOException {
 
         int numOfCycles = 200;
+        int numOfRuns = 10;
+
         // AntDensity
-        runSystem(0, 1.0f, 5.0f, 0.08f, 0.05, numOfCycles, 10);
+        runSystem(0, 1.0f, 5.0f, 0.08f, 0.05, numOfCycles, numOfRuns);
 
         // AntQuantity
-        runSystem(1, 1.0f, 5.0f, 0.08f, 1, numOfCycles, 10);
+        runSystem(1, 1.0f, 5.0f, 0.08f, 1, numOfCycles, numOfRuns);
 
         // AntCycle
-        runSystem(2, 1.0f, 5.0f, 0.08f, 1, numOfCycles, 10);
+        runSystem(2, 1.0f, 5.0f, 0.08f, 1, numOfCycles, numOfRuns);
 
         // AntElitist
-        runSystem(3, 1.0f, 5.0f, 0.08f, 1, numOfCycles, 10);
+        runSystem(3, 1.0f, 5.0f, 0.08f, 1, numOfCycles, numOfRuns);
 
         // AntMaxMin
-        runSystem(4, 1.0f, 5.0f, 0.08f, 1, numOfCycles, 10);
-
-
-//        int numCycles = 200;
-//
-//        // ANT-DENSITY =============
-//        // init tsp
-//        TSP densityTSP = readInData();
-//
-//        // init antDensity
-//        AntDensity antDensity = new AntDensity(densityTSP);
-//
-//        // iterate antCycle solutions
-//        antDensity.cycle(numCycles);
-//
-//        // ANT-QUANTITY =============
-//        // init tsp
-//        TSP quantityTSP= readInData();
-//
-//        // init antDensity
-//        AntQuantity antQuantity = new AntQuantity(quantityTSP);
-//
-//        // iterate antCycle solutions
-//        antQuantity.cycle(numCycles);
-//
-//        // ANT-CYCLE =============
-//        // initialize cycleTSP
-//        TSP cycleTSP = readInData();
-//
-//        // init the antCycle object
-//        AntCycle cycleTrail = new AntCycle(cycleTSP);
-//
-//        cycleTrail.cycle(numCycles);
-//
-//        //ELITIST ====================
-//        // initialize cycleTSP
-//        TSP elitistTSP = readInData();
-//
-//        // init the antCycle object
-//        AntElitist elitistTrail = new AntElitist(elitistTSP);
-//
-//        // iterate antCycle solutions
-//        elitistTrail.elitistCycleHelper(numCycles);
-//
-//        //MAX-MIN ====================
-//        // initialize cycleTSP
-//        TSP maxMinTSP = readInData();
-//
-//        // init the antCycle object
-//        AntMaxMin maxMinTrail = new AntMaxMin(maxMinTSP);
-//
-//        // iterate antCycle solutions
-//        maxMinTrail.maxMinCycler(numCycles);
+        runSystem(4, 1.0f, 5.0f, 0.08f, 1, numOfCycles, numOfRuns);
     }
 }

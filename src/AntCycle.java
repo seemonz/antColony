@@ -61,7 +61,7 @@ public class AntCycle extends AntSystem{
             Ant currentAnt = ants.get(i);
             double currentTourLength = pathLength(tspInstance, currentAnt);
 
-            // go through path of ant and lay down pheromone onto TSP pheromone = Q/lengthOfPath
+            // go through path of ant and lay down pheromone onto TSP pheromone = Q/lengthOfPath for all antSolutions
             for(int k = 0; k < currentAnt.getPath().length; k++) {
                 // if we are the last node, then we get edge back to start
                 if (k == currentAnt.getPath().length - 1) {

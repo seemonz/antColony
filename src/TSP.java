@@ -1,9 +1,9 @@
-// our instance of the Traveling Salesman Problem
+// Class for holding the Traveling Salesman Problem
 public class TSP {
     private float[][] nodeLocations; // 2d array of x, y positions of each node -- [node][x, y]
     private double[][] nodeDistances; // 2d array of the distance of each node to each. ie [node][each distance to every other node]
     private double[][] nodePheromone; // 2d array of pheromone on each edge -- [node][each edge pheromone
-    private int size;
+    private int size; // size is number of cities in the TSP - ie number of nodes in the graph
 
     // constructor
     TSP(float[][] input) {
@@ -44,14 +44,17 @@ public class TSP {
        return Math.sqrt(distance);
     }
 
+    // returns the pheromone array
     public double[][] getNodePheromone() {
         return nodePheromone;
     }
 
+    // returns the nodeLocations array
     public float[][] getNodeLocations() {
         return nodeLocations;
     }
 
+    // returns the edge distances array
     public double[][] getNodeDistances() {
         return nodeDistances;
     }

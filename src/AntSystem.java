@@ -1,32 +1,22 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 // the base class that runs the basic system -- everything else is an extension of this
 abstract class AntSystem {
-    TSP tspInstance;
-    float alpha; // parameter for weighting the pheromone
-    float beta; // parameter for weighting the distance heuristic
+    TSP tspInstance; // the TSP object that the ants lay their pheromone down on
+    float alpha; // parameter for weighting the relative importance of the pheromone in the probability function
+    float beta; // parameter for weighting the relative importance of the visibility heuristic in the probability function
 
     // constructor
     public AntSystem(TSP tsp, float alpha, float beta) {
         this.tspInstance = tsp;
-        this.alpha = alpha; // parameter for weighting the pheromone
-        this.beta = beta; // parameter for weighting the distance heuristic
+        this.alpha = alpha;
+        this.beta = beta;
     }
 
-    // if we set either to 1 then that one isn't considered in the probability function
-//    private static float alpha = 1.0f; // parameter for weighting the pheromone
-//    private static float beta = 5.0f; // parameter for weighting the distance heuristic
-
-    // sets up ants on each node of the TSP -- currently we use as many ants as there are nodes in the tsp
+    // sets up ants on each node of the TSP -- currently we use as many ants as there are nodes in the TSP
     protected ArrayList<Ant> initializeAnts(TSP tspInstance) {
-        ArrayList<Ant> ants = new ArrayList<>(); // list of our ants
+        ArrayList<Ant> ants = new ArrayList<>(); // list storing the ants
 
         // for each node we make an ant and set it's currentNode
         for(int i = 0; i < tspInstance.getSize(); i++) {
@@ -39,7 +29,7 @@ abstract class AntSystem {
         return ants;
     }
 
-    // this steps through the tsp instance one cycle and provides solutions for all the ants on it
+    // this steps through the tspInstance one cycle and provides solutions/tours for all the ants on it
     protected void findSolutions(TSP tspInstance, ArrayList<Ant> ants) {
         // for the size of the tsp we iterate through the ants and set their nextStep -- ie choose the greedy node, no pheromone yet
         for(int i = 0; i < tspInstance.getSize() - 1; i++) {
@@ -47,29 +37,32 @@ abstract class AntSystem {
         }
     }
 
-    // this sets the next node for ants to visit
+    // sets the next node for each ant to visit
     protected void stepAnts(TSP tspInstance, ArrayList<Ant> ants) {
-        // lets just pick the greedy choice for each ant to start with
+        // for each ant in the list of ants
         for(int i = 0; i < ants.size(); i++) {
-            // get currentAnt and get greedy choice for it
+            // get currentAnt and get the currentChoice for said ant
             Ant currentAnt = ants.get(i);
-            int currentGreedyChoice = chooseEdge(tspInstance, currentAnt);
+            int currentChoice = chooseEdge(tspInstance, currentAnt); // our choice of node to move to based on probability function
 
             // set the new currentNode and update path and visited and iterate count
-            currentAnt.setCurrentNode(currentGreedyChoice);
-            currentAnt.getVisited()[currentGreedyChoice] = 1;
-            currentAnt.getPath()[currentAnt.getCount()] = currentGreedyChoice;
+            currentAnt.setCurrentNode(currentChoice);
+            currentAnt.getVisited()[currentChoice] = 1;
+            currentAnt.getPath()[currentAnt.getCount()] = currentChoice;
             currentAnt.setCount(currentAnt.getCount() + 1);
         }
     }
 
+    // returns the total path length of the ants tour/solution
     protected double pathLength(TSP tspInstance, Ant ant) {
         double pathLength = 0;
 
+        // for each node in TSP we sum the edgeDist that the ant chose
         for(int i = 0; i < tspInstance.getSize(); i++) {
             double[][] dist = tspInstance.getNodeDistances();
             int[] path = ant.getPath();
 
+            // add these edges in path to the pathLength
             if(i == tspInstance.getSize() - 1) { // the last value, connect to the first node in path, otherwise connect to path[i+1]
                 pathLength += dist[path[i]][path[0]];
             } else {
@@ -80,7 +73,7 @@ abstract class AntSystem {
         return pathLength;
     }
 
-    // takes in an Ant and returns the next closest node to go to
+    // takes in an Ant and returns the next closest node to go to -- it's a basic greedy approach used in the naive solution
     protected int greedyChoice(Ant currentAnt, TSP tspInstance) {
         double minDistPosition = 0;
         double minDist = 1000000000; // set to a high val
@@ -111,23 +104,23 @@ abstract class AntSystem {
         return (int) minDistPosition; // returns the position of the nextNode to move to -- we downcast the double to int
     }
 
-    // we do our probabilistic selection of the nextMove of the ant
+    // probabilistic selection of the nextMove of the ant
     protected int chooseEdge(TSP tspInstance, Ant currentAnt) {
         int edgeChoice = 0;
-        double[] initialProbs = new double[tspInstance.getSize()]; // this we store our intial probability values
+        double[] initialProbs = new double[tspInstance.getSize()]; // store the initial probability values
         double[] probablities = new double[tspInstance.getSize()];
 
-        // for currentAnt currentNode we compute the probabilities of all its potential moves
+        // for currentAnt's currentNode we compute the probabilities of all its potential moves
         // loop through every position of the TSP
         for(int i = 0; i < tspInstance.getSize(); i++) {
             boolean visited = false;
 
-            // check if visited
+            // check if visited node
             if(currentAnt.getVisited()[i] == 1) {
                 visited = true;
             }
 
-            // if we havent visited i in currentAnt.path then we compute its prob and save into initialProb
+            // if haven't visited i in currentAnt.path then compute its prob and save into initialProb
             if(!visited && currentAnt.getCurrentNode() != i) {
                 double pheromoneProb = Math.pow(tspInstance.getNodePheromone()[currentAnt.getCurrentNode()][i], alpha); // pheromone
                 double heurisiticProb = Math.pow(1/(tspInstance.getNodeDistances()[currentAnt.getCurrentNode()][i]), beta); // 1/distance
@@ -137,7 +130,7 @@ abstract class AntSystem {
             }
         }
 
-        // we sum of the initial probabilities
+        // sum of the initial probabilities
         double sumOfProbs = 0;
         for(int i = 0; i < initialProbs.length; i++) {
             sumOfProbs += initialProbs[i];
@@ -148,17 +141,17 @@ abstract class AntSystem {
             probablities[i] =  initialProbs[i]/sumOfProbs;
         }
 
-        // sample q from uniform distribution and apply probs
+        // sample q from uniform distribution and apply probabilities
         Random rand = new Random();
         double sample = rand.nextDouble();
 
         double sum = 0;
         for(int i = 0; i < probablities.length; i++) {
-            sum += probablities[i]; // add each prob as we go
+            sum += probablities[i]; // add each probability as we go
 
             // if our sample lies inside this interval then choose i
             if(sample <= sum) {
-                edgeChoice = i; // this is our probalistic choice
+                edgeChoice = i; // this is our probabilistic choice
                 break; // exit,
             }
         }
